@@ -13,8 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter App',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home:
-          const EventListScreen(), // Cambia esta línea si deseas que se muestre EventListScreen al iniciar
+      home: const EventListScreen(), // Pantalla inicial con la lista de eventos
     );
   }
 }

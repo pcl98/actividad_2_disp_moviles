@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:actividad_2_disp_moviles/models/event.dart';
 import 'package:actividad_2_disp_moviles/screens/result_screen.dart';
-import 'package:actividad_2_disp_moviles/models/event.dart'; // Asegúrate de tener el modelo de evento
 
 class FormScreen extends StatefulWidget {
   const FormScreen({super.key});
@@ -14,7 +14,10 @@ class _FormScreenState extends State<FormScreen> {
   final _nombreController = TextEditingController();
   final _descripcionController = TextEditingController();
   final _localidadController = TextEditingController();
-  final List<Event> _eventos = []; // Lista para almacenar los eventos
+  String? _categoriaSeleccionada; // Para el DropdownButton
+
+  // Opciones para el DropdownButton (categorías de eventos, por ejemplo)
+  final List<String> _categorias = ['Cultural', 'Deporte', 'Educación'];
 
   @override
   void dispose() {
@@ -36,14 +39,13 @@ class _FormScreenState extends State<FormScreen> {
         localidad: localidad,
       );
 
-      setState(() {
-        _eventos.add(nuevoEvento);
-      });
-
+      // Navegar a la pantalla de Resultados y pasar el evento creado
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ResultScreen(eventos: _eventos),
+          builder:
+              (context) =>
+                  ResultScreen(evento: nuevoEvento), // Pasamos el evento
         ),
       );
     }
@@ -85,6 +87,28 @@ class _FormScreenState extends State<FormScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingrese la localidad';
+                  }
+                  return null;
+                },
+              ),
+              DropdownButtonFormField<String>(
+                value: _categoriaSeleccionada,
+                decoration: InputDecoration(labelText: 'Categoría del evento'),
+                items:
+                    _categorias.map((categoria) {
+                      return DropdownMenuItem(
+                        value: categoria,
+                        child: Text(categoria),
+                      );
+                    }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _categoriaSeleccionada = value;
+                  });
+                },
+                validator: (value) {
+                  if (value == null) {
+                    return 'Por favor seleccione una categoría';
                   }
                   return null;
                 },
