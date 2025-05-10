@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:actividad_2_disp_moviles/models/event.dart';
 
 class FormScreen extends StatefulWidget {
-  const FormScreen({super.key});
+  final Function(Event)
+  onEventoCreado; // The callback that receives the new event
+
+  const FormScreen({super.key, required this.onEventoCreado});
 
   @override
   State<FormScreen> createState() => _FormScreenState();
@@ -9,87 +13,108 @@ class FormScreen extends StatefulWidget {
 
 class _FormScreenState extends State<FormScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _nombreController = TextEditingController();
+  final _descripcionController = TextEditingController();
+  final _localidadController = TextEditingController();
+  String? _categoriaSeleccionada;
 
-  String nombre = '';
-  String categoria = 'Concierto';
-  DateTime? fecha;
+  final List<String> _categorias = ['Cultural', 'Deporte', 'Educación'];
 
-  List<String> categorias = ['Concierto', 'Teatro', 'Deporte'];
+  @override
+  void dispose() {
+    _nombreController.dispose();
+    _descripcionController.dispose();
+    _localidadController.dispose();
+    super.dispose();
+  }
+
+  void _enviarFormulario() {
+    if (_formKey.currentState!.validate()) {
+      final nombre = _nombreController.text;
+      final descripcion = _descripcionController.text;
+      final localidad = _localidadController.text;
+
+      final nuevoEvento = Event(
+        nombre: nombre,
+        descripcion: descripcion,
+        localidad: localidad,
+      );
+
+      // Call the callback to add the event to the list
+      widget.onEventoCreado(nuevoEvento);
+
+      // Go back to the previous screen
+      Navigator.pop(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Crear Evento'),
-      ),
+      appBar: AppBar(title: Text('Crear evento')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              // Campo Nombre
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Nombre del evento'),
-                onChanged: (value) {
-                  setState(() {
-                    nombre = value;
-                  });
+                controller: _nombreController,
+                decoration: InputDecoration(labelText: 'Nombre del evento'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingrese el nombre del evento';
+                  }
+                  return null;
                 },
               ),
-
-              const SizedBox(height: 16),
-
-              // Dropdown Categoría
+              TextFormField(
+                controller: _descripcionController,
+                decoration: InputDecoration(labelText: 'Descripción'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingrese una descripción';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _localidadController,
+                decoration: InputDecoration(labelText: 'Localidad'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingrese la localidad';
+                  }
+                  return null;
+                },
+              ),
               DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: 'Categoría'),
-                value: categoria,
-                items: categorias
-                    .map((cat) => DropdownMenuItem(value: cat, child: Text(cat)))
-                    .toList(),
+                value: _categoriaSeleccionada,
+                decoration: InputDecoration(labelText: 'Categoría del evento'),
+                items:
+                    _categorias.map((categoria) {
+                      return DropdownMenuItem(
+                        value: categoria,
+                        child: Text(categoria),
+                      );
+                    }).toList(),
                 onChanged: (value) {
                   setState(() {
-                    categoria = value!;
+                    _categoriaSeleccionada = value;
                   });
                 },
-              ),
-
-              const SizedBox(height: 16),
-
-              // Botón para elegir fecha
-              ElevatedButton(
-                onPressed: () async {
-                  final DateTime? picked = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2020),
-                    lastDate: DateTime(2030),
-                  );
-                  if (picked != null) {
-                    setState(() {
-                      fecha = picked;
-                    });
+                validator: (value) {
+                  if (value == null) {
+                    return 'Por favor seleccione una categoría';
                   }
+                  return null;
                 },
-                child: Text(fecha == null
-                    ? 'Seleccionar fecha'
-                    : 'Fecha: ${fecha!.day}/${fecha!.month}/${fecha!.year}'),
               ),
-
-              const SizedBox(height: 24),
-
-              // Botón Guardar
+              SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Aquí más adelante crearemos el evento
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Evento guardado')),
-                    );
-                  }
-                },
-                child: const Text('Guardar Evento'),
-              )
+                onPressed: _enviarFormulario,
+                child: Text('Enviar'),
+              ),
             ],
           ),
         ),

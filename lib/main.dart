@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/form_screen.dart';
+import 'screens/event_list_screen.dart'; // Asegúrate de que la ruta sea correcta
 
 void main() {
   runApp(const MyApp());
@@ -11,13 +11,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Eventos App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const FormScreen(),
+      title: 'Flutter App',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const EventListScreen(), // Pantalla inicial con la lista de eventos
     );
   }
 }
-
