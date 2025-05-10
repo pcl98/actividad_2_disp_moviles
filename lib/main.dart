@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'screens/event_list_screen.dart'; // Asegúrate de que la ruta sea correcta
+import 'screens/home_screen.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(EventApp());
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class EventApp extends StatelessWidget {
+  const EventApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter App',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const EventListScreen(), // Pantalla inicial con la lista de eventos
+      title: 'Eventos Madrid',
+      theme: ThemeData(primarySwatch: Colors.indigo),
+      home: HomeScreen(),
     );
   }
 }
