@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:actividad_2_disp_moviles/services/event_service.dart'; // Asegúrate de que la ruta es correcta
+import 'package:actividad_2_disp_moviles/services/event_service.dart'; // Make sure the import is correct
 import 'package:actividad_2_disp_moviles/models/event.dart';
-import 'package:actividad_2_disp_moviles/screens/form_screen.dart'; // Asegúrate de que la ruta es correcta
+import 'package:actividad_2_disp_moviles/screens/form_screen.dart'; // Make sure the import is correct
 
 class EventListScreen extends StatefulWidget {
   const EventListScreen({super.key});
@@ -16,8 +16,18 @@ class _EventListScreenState extends State<EventListScreen> {
   @override
   void initState() {
     super.initState();
-    // Llama al servicio para obtener los eventos
-    _events = EventService().fetchEvents();
+    _events = EventService().fetchEvents(); // Fetching the events
+  }
+
+  // Método para agregar un nuevo evento al principio de la lista
+  void _agregarEvento(Event evento) {
+    setState(() {
+      _events = _events.then((value) {
+        final nuevaLista = List<Event>.from(value); // Copiar la lista existente
+        nuevaLista.insert(0, evento); // Insertar el nuevo evento al principio
+        return nuevaLista; // Retornar la nueva lista con el evento al principio
+      });
+    });
   }
 
   @override
@@ -77,10 +87,12 @@ class _EventListScreenState extends State<EventListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navegar a la pantalla FormScreen para crear un nuevo evento
+          // Navigate to the FormScreen to create a new event
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const FormScreen()),
+            MaterialPageRoute(
+              builder: (context) => FormScreen(onEventoCreado: _agregarEvento),
+            ),
           );
         },
         child: const Icon(Icons.add),

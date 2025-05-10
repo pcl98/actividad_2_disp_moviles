@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:actividad_2_disp_moviles/models/event.dart';
-import 'package:actividad_2_disp_moviles/screens/result_screen.dart';
 
 class FormScreen extends StatefulWidget {
-  const FormScreen({super.key});
+  final Function(Event)
+  onEventoCreado; // The callback that receives the new event
+
+  const FormScreen({super.key, required this.onEventoCreado});
 
   @override
   State<FormScreen> createState() => _FormScreenState();
@@ -14,9 +16,8 @@ class _FormScreenState extends State<FormScreen> {
   final _nombreController = TextEditingController();
   final _descripcionController = TextEditingController();
   final _localidadController = TextEditingController();
-  String? _categoriaSeleccionada; // Para el DropdownButton
+  String? _categoriaSeleccionada;
 
-  // Opciones para el DropdownButton (categorías de eventos, por ejemplo)
   final List<String> _categorias = ['Cultural', 'Deporte', 'Educación'];
 
   @override
@@ -39,15 +40,11 @@ class _FormScreenState extends State<FormScreen> {
         localidad: localidad,
       );
 
-      // Navegar a la pantalla de Resultados y pasar el evento creado
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder:
-              (context) =>
-                  ResultScreen(evento: nuevoEvento), // Pasamos el evento
-        ),
-      );
+      // Call the callback to add the event to the list
+      widget.onEventoCreado(nuevoEvento);
+
+      // Go back to the previous screen
+      Navigator.pop(context);
     }
   }
 
