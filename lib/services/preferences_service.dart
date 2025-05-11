@@ -4,7 +4,7 @@ class PreferencesService {
   static const String _keyDistritos = 'distritos';
   static const String _keySoloGratuitos = 'soloGratuitos';
 
-  /// Guarda las listas de distritos y la opción de gratuitos
+  // Guarda las listas de distritos y la opción de gratuitos
   static Future savePreferences({
     required List distritos,
     required bool soloGratuitos,
@@ -14,7 +14,7 @@ class PreferencesService {
     await prefs.setBool(_keySoloGratuitos, soloGratuitos);
   }
 
-  /// Carga las preferencias guardadas
+  // Cargar las preferencias guardadas
   static Future<Map<String, dynamic>> loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     final distritos = prefs.getStringList(_keyDistritos) ?? [];

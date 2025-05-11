@@ -1,3 +1,4 @@
+import 'package:actividad_2_disp_moviles/screens/event_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:actividad_2_disp_moviles/models/event.dart';
 import 'package:actividad_2_disp_moviles/services/event_service.dart';
@@ -21,10 +22,11 @@ class _EventListScreenState extends State {
   @override
   void initState() {
     super.initState();
-    _futureEvents = _loadPrefsAndEvents();
+    _futureEvents = _loadPrefs();
   }
 
-  Future<List> _loadPrefsAndEvents() async {
+  // Cargar preferencias del usuario
+  Future<List> _loadPrefs() async {
     final prefs = await PreferencesService.loadPreferences();
     _soloGratuitos = prefs['soloGratuitos'] as bool;
     _prefDistritos = (prefs['distritos'] as List).toSet();
@@ -41,6 +43,7 @@ class _EventListScreenState extends State {
     }).toList();
   }
 
+  // Funciones de formateo de texto para mejorar UX:
   String _formatCategoria(String text) {
     final parts = _splitCamelCase(text);
     return parts.join('-');
@@ -60,6 +63,7 @@ class _EventListScreenState extends State {
         .split(' ');
   }
 
+  // Agrega eventos a la lista
   void _agregarEvento(Event evento) {
     setState(() {
       _futureEvents = _futureEvents.then((lista) {
@@ -131,6 +135,14 @@ class _EventListScreenState extends State {
                     '${event.esGratuito ? 'Gratuito' : 'De pago'}',
                   ),
                   isThreeLine: true,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => EventDetailScreen(event: event),
+                      ),
+                    );
+                  },
                 ),
               );
             },

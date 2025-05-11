@@ -56,13 +56,6 @@ class _FormScreenState extends State<FormScreen> {
     super.dispose();
   }
 
-  /// Inserta espacios antes de mayúsculas para convertir los nombres de los distritos
-  String _humanizar(String s) {
-    return s
-        .replaceAllMapped(RegExp(r'([A-Z])'), (m) => ' ${m.group(0)}')
-        .trim();
-  }
-
   Future _pickFecha() async {
     final ahora = DateTime.now();
     final fecha = await showDatePicker(
@@ -76,6 +69,7 @@ class _FormScreenState extends State<FormScreen> {
     }
   }
 
+  // Comprobación de campos y envío del formulario
   void _enviarFormulario() {
     if (_formKey.currentState!.validate()) {
       if (_fechaSeleccionada == null) {
