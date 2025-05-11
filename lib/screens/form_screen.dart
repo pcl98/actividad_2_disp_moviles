@@ -29,8 +29,8 @@ class _FormScreenState extends State<FormScreen> {
     'Chamartín',
     'Tetuán',
     'Chamberí',
-    'FuencarralElPardo',
-    'MoncloaAravaca',
+    'Fuencarral-ElPardo',
+    'Moncloa-Aravaca',
     'Latina',
     'Carabanchel',
     'Usera',
@@ -41,7 +41,7 @@ class _FormScreenState extends State<FormScreen> {
     'Villaverde',
     'VillaDeVallecas',
     'Vicálvaro',
-    'SanBlasCanillejas',
+    'SanBlas-Canillejas',
     'Barajas',
   ];
 
@@ -54,13 +54,6 @@ class _FormScreenState extends State<FormScreen> {
     _descripcionController.dispose();
     _localidadController.dispose();
     super.dispose();
-  }
-
-  /// Inserta espacios antes de mayúsculas para convertir los nombres de los distritos
-  String _humanizar(String s) {
-    return s
-        .replaceAllMapped(RegExp(r'([A-Z])'), (m) => ' ${m.group(0)}')
-        .trim();
   }
 
   Future _pickFecha() async {
@@ -76,26 +69,7 @@ class _FormScreenState extends State<FormScreen> {
     }
   }
 
-  /*void _enviarFormulario() {
-    if (_formKey.currentState!.validate()) {
-      final nombre = _nombreController.text;
-      final descripcion = _descripcionController.text;
-      final localidad = _localidadController.text;
-
-      final nuevoEvento = Event(
-        nombre: nombre,
-        descripcion: descripcion,
-        localidad: localidad,
-      );
-
-      // Call the callback to add the event to the list
-      widget.onEventoCreado(nuevoEvento);
-
-      // Go back to the previous screen
-      Navigator.pop(context);
-    }
-  }*/
-
+  // Comprobación de campos y envío del formulario
   void _enviarFormulario() {
     if (_formKey.currentState!.validate()) {
       if (_fechaSeleccionada == null) {
@@ -113,7 +87,6 @@ class _FormScreenState extends State<FormScreen> {
       final nuevoEvento = Event(
         nombre: _nombreController.text,
         descripcion: _descripcionController.text,
-        localidad: _localidadController.text,
         categoria: _categoriaSeleccionada!,
         distrito: _distritoSeleccionado!,
         fechaInicio: _fechaSeleccionada!,
@@ -124,82 +97,6 @@ class _FormScreenState extends State<FormScreen> {
       Navigator.pop(context);
     }
   }
-
-  /*@override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Crear evento')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _nombreController,
-                decoration: InputDecoration(labelText: 'Nombre del evento'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese el nombre del evento';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _descripcionController,
-                decoration: InputDecoration(labelText: 'Descripción'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese una descripción';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _localidadController,
-                decoration: InputDecoration(labelText: 'Localidad'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese la localidad';
-                  }
-                  return null;
-                },
-              ),
-              DropdownButtonFormField<String>(
-                value: _categoriaSeleccionada,
-                decoration: InputDecoration(labelText: 'Categoría del evento'),
-                items:
-                    _categorias.map((categoria) {
-                      return DropdownMenuItem(
-                        value: categoria,
-                        child: Text(categoria),
-                      );
-                    }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _categoriaSeleccionada = value;
-                  });
-                },
-                validator: (value) {
-                  if (value == null) {
-                    return 'Por favor seleccione una categoría';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _enviarFormulario,
-                child: Text('Enviar'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-*/
 
   @override
   Widget build(BuildContext context) {
@@ -233,17 +130,6 @@ class _FormScreenState extends State<FormScreen> {
 
               const SizedBox(height: 16),
 
-              // Localidad
-              TextFormField(
-                controller: _localidadController,
-                decoration: const InputDecoration(labelText: 'Localidad'),
-                validator:
-                    (v) =>
-                        (v == null || v.isEmpty) ? 'Ingresa localidad' : null,
-              ),
-
-              const SizedBox(height: 16),
-
               // Categoría
               DropdownButtonFormField<String>(
                 value: _categoriaSeleccionada,
@@ -266,7 +152,14 @@ class _FormScreenState extends State<FormScreen> {
                     _distritos.map((dist) {
                       return DropdownMenuItem(
                         value: dist,
-                        child: Text(_humanizar(dist)),
+                        child: Text(
+                          dist
+                              .replaceAllMapped(
+                                RegExp(r'([A-Z])'),
+                                (m) => ' ${m.group(0)}',
+                              )
+                              .trim(),
+                        ),
                       );
                     }).toList(),
                 onChanged: (v) => setState(() => _distritoSeleccionado = v),

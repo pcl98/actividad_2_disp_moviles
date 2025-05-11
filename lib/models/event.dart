@@ -1,7 +1,6 @@
 class Event {
   final String nombre;
   final String descripcion;
-  final String localidad;
   final bool esGratuito;
   final DateTime fechaInicio;
   final String categoria;
@@ -10,7 +9,6 @@ class Event {
   Event({
     required this.nombre,
     required this.descripcion,
-    required this.localidad,
     required this.esGratuito,
     required this.fechaInicio,
     required this.categoria,
@@ -21,7 +19,6 @@ class Event {
     return Event(
       nombre: json['title'] ?? 'Sin título',
       descripcion: json['description'] ?? 'Sin descripción',
-      localidad: json['event-location'] ?? 'Desconocido',
       esGratuito: json['free'] == 1,
       fechaInicio: DateTime.tryParse(json['dtstart'] ?? '') ?? DateTime.now(),
       categoria: _extraerUltimoSegmento(json['@type']) ?? 'Sin categoría',
