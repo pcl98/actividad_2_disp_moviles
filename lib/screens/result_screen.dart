@@ -16,7 +16,6 @@ class ResultScreen extends StatelessWidget {
           children: [
             Text('Nombre: ${evento.nombre}'),
             Text('Descripción: ${evento.descripcion}'),
-            Text('Localidad: ${evento.localidad}'),
           ],
         ),
       ),
